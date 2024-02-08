@@ -740,7 +740,8 @@ function actuallyMigrateType(
     }
 
     case "InterfaceTypeAnnotation":
-      throw new Error(`Unsupported AST node: ${JSON.stringify(flowType.type)}`);
+      // Drop Interface and use type literal
+      return migrateType(reporter, state, flowType.body);
 
     case "IntersectionTypeAnnotation":
       return t.tsIntersectionType(

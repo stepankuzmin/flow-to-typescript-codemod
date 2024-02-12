@@ -350,7 +350,7 @@ class MigrationReporter {
   foundNonFlowfile(filePath: string) {
     this.log(
       MigrationReportItemType.foundNonFlowFile,
-      MigrationReportItemSeverity.warn,
+      MigrationReportItemSeverity.error,
       filePath,
       { start: { column: 0, line: 0 }, end: { column: 0, line: 0 } },
       "The codemod skipped this file because it was not annotated with `@flow`."
@@ -360,7 +360,7 @@ class MigrationReporter {
   foundDeclarationFile(filePath: string) {
     this.log(
       MigrationReportItemType.foundDeclarationFile,
-      MigrationReportItemSeverity.warn,
+      MigrationReportItemSeverity.error,
       filePath,
       { start: { column: 0, line: 0 }, end: { column: 0, line: 0 } },
       "The codemod skipped this file because it contains Flow type declarations. Declarations are ignored since they often have issues parsing or conflict with TS declarations."

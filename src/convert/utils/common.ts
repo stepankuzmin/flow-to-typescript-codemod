@@ -240,6 +240,13 @@ export const GlobalTypes = {
   immediateID: "number",
   AnimationFrameID: "number",
   RequestOptions: "RequestInit",
+  Position: "GeolocationPosition",
+  $TypedArray: "ArrayBufferView",
+  $ArrayBufferView: "ArrayBufferView",
+  PositionError: "GeolocationPositionError",
+  IDBEnvironment: "WindowOrWorkerGlobalScope",
+  ReferrerPolicyType: "ReferrerPolicy",
+  EventListenerOptionsOrUseCapture: "AddEventListenerOptions",
 } as const;
 
 export const LiteralTypes = {

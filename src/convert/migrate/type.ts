@@ -958,6 +958,13 @@ function actuallyMigrateType(
 
       return t.tsUndefinedKeyword();
 
+    case "IndexedAccessType": {
+      return t.tsIndexedAccessType(
+        migrateType(reporter, state, flowType.objectType),
+        migrateType(reporter, state, flowType.indexType)
+      );
+    }
+
     default: {
       const never: { type: string } = flowType;
       reporter.unhandledFlowInputNode(

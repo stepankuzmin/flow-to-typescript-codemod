@@ -1,5 +1,6 @@
 import * as t from "@babel/types";
 import traverse from "@babel/traverse";
+import type { NodePath } from "@babel/traverse";
 
 import {
   replaceWith,
@@ -17,16 +18,69 @@ import { migrateQualifiedIdentifier } from "./migrate/qualified-identifier";
 import { annotateParamsWithFlowTypeAtPos } from "./flow/annotate-params";
 import { functionVisitor } from "./function-visitor";
 import { TransformerInput } from "./transformer";
-import { ReactTypes } from "./utils/type-mappings";
+import {
+  ReactTypes,
+  GlMatrixTypes,
+  GeoJSONTypes,
+  MapboxVectorTileTypes,
+} from "./utils/type-mappings";
 import { flowTypeAtPos } from "./flow/type-at-pos";
 
 /**
  * Rename React imports for TypeScript
  */
-const updateReactImports = (
-  node: t.ImportDeclaration,
+const updateImports = (
+  path: NodePath<t.ImportDeclaration>,
   specifier: t.ImportSpecifier
 ) => {
+  const { node } = path;
+
+  if (
+    node.source.value === "gl-matrix" &&
+    (specifier.importKind === "type" || node.importKind === "type")
+  ) {
+    // `import type {Vec4} from 'gl-matrix'` => `import {vec4} from 'gl-matrix'`
+    if (
+      specifier.type === "ImportSpecifier" &&
+      specifier.imported.type === "Identifier" &&
+      specifier.imported.name in GlMatrixTypes
+    ) {
+      specifier.imported.name =
+        GlMatrixTypes[specifier.imported.name as keyof typeof GlMatrixTypes];
+    }
+  }
+
+  if (
+    node.source.value === "@mapbox/geojson-types" &&
+    (specifier.importKind === "type" || node.importKind === "type")
+  ) {
+    // `import type {GeoJSON} from '@mapbox/geojson-types'` => ``
+    if (
+      specifier.type === "ImportSpecifier" &&
+      specifier.imported.type === "Identifier" &&
+      specifier.imported.name in GeoJSONTypes
+    ) {
+      path.remove();
+    }
+  }
+
+  if (
+    node.source.value === "@mapbox/vector-tile" &&
+    (specifier.importKind === "type" || node.importKind === "type")
+  ) {
+    // `import type {IVectorTile} from '@mapbox/vector-tile'` => `import {VectorTile} from '@mapbox/vector-tile'`
+    if (
+      specifier.type === "ImportSpecifier" &&
+      specifier.imported.type === "Identifier" &&
+      specifier.imported.name in MapboxVectorTileTypes
+    ) {
+      specifier.imported.name =
+        MapboxVectorTileTypes[
+          specifier.imported.name as keyof typeof MapboxVectorTileTypes
+        ];
+    }
+  }
+
   if (
     node.source.value === "react" &&
     (specifier.importKind === "type" || node.importKind === "type")
@@ -103,9 +157,10 @@ export function transformDeclarations({
         for (const specifier of path.node.specifiers) {
           if (
             specifier.type === "ImportSpecifier" &&
-            (specifier.importKind === "type" || path.node.importKind === "type")
+            ((specifier && specifier.importKind === "type") ||
+              (path.node && path.node.importKind === "type"))
           ) {
-            updateReactImports(path.node, specifier);
+            updateImports(path, specifier);
 
             // `import {type X} from` => `import {X} from`
             if (specifier.importKind === "type") {

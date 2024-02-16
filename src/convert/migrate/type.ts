@@ -16,6 +16,9 @@ import {
   ReactTypes,
   SyntheticEvents,
   MomentTypes,
+  GlMatrixTypes,
+  GeoJSONTypes,
+  MapboxVectorTileTypes,
 } from "../utils/type-mappings";
 import { State } from "../../runner/state";
 import { matchesFullyQualifiedName } from "../utils/matchers";
@@ -733,6 +736,38 @@ function actuallyMigrateType(
             t.identifier(MomentTypes[id.right.name as keyof typeof MomentTypes])
           ),
           params
+        );
+      }
+
+      // `Mat2` → `mat2`
+      if (
+        id.type === "Identifier" &&
+        GlMatrixTypes[id.name as keyof typeof GlMatrixTypes]
+      ) {
+        return t.tsTypeReference(
+          t.identifier(GlMatrixTypes[id.name as keyof typeof GlMatrixTypes])
+        );
+      }
+
+      // `GeoJSONFeature` -> `GeoJSON.Feature`
+      if (
+        id.type === "Identifier" &&
+        GeoJSONTypes[id.name as keyof typeof GeoJSONTypes]
+      ) {
+        return t.tsTypeReference(
+          t.identifier(GeoJSONTypes[id.name as keyof typeof GeoJSONTypes])
+        );
+      }
+
+      // `IVectorTile` -> `VectorTile`
+      if (
+        id.type === "Identifier" &&
+        MapboxVectorTileTypes[id.name as keyof typeof MapboxVectorTileTypes]
+      ) {
+        return t.tsTypeReference(
+          t.identifier(
+            MapboxVectorTileTypes[id.name as keyof typeof MapboxVectorTileTypes]
+          )
         );
       }
 

@@ -74,4 +74,24 @@ describe("mapbox-gl", () => {
 
     expect(await transform(src)).toBe(expected);
   });
+
+  it("avoid readonly objects", async () => {
+    const src = dedent`
+      const deltas = {
+          zoom: 0,
+          pitch: 0,
+          bearing: 0
+      };
+      `;
+
+      const expected = dedent`
+      const deltas = {
+          zoom: 0,
+          pitch: 0,
+          bearing: 0
+      };
+      `;
+
+    expect(await transform(src)).toBe(expected);
+  });
 });

@@ -431,7 +431,7 @@ export function transformDeclarations({
         path.node.id.typeAnnotation !== null;
       if (
         isConstDeclaration &&
-        (isObjectDeclaration || (isExported && isArrayDeclaration)) &&
+        (isExported && (isObjectDeclaration || isArrayDeclaration)) &&
         !hasTypeAnnotation
       ) {
         const asExpression = t.tsAsExpression(

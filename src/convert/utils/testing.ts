@@ -137,6 +137,7 @@ const stateBuilder = (
       ...stateOverrides.config,
     },
     configurableTypeProvider: typeProvider,
+    valueImports: new Set(),
   };
 };
 

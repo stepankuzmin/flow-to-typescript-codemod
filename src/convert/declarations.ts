@@ -31,22 +31,38 @@ import { flowTypeAtPos } from "./flow/type-at-pos";
  */
 const updateImports = (
   path: NodePath<t.ImportDeclaration>,
-  specifier: t.ImportSpecifier
+  specifier: t.ImportSpecifier,
+  state: TransformerInput['state']
 ) => {
   const { node } = path;
+  if (!node) return;
 
-  if (
-    node.source.value === "gl-matrix" &&
-    (specifier.importKind === "type" || node.importKind === "type")
-  ) {
-    // `import type {Vec4} from 'gl-matrix'` => `import {vec4} from 'gl-matrix'`
+  if (node.source.value === "gl-matrix") {
     if (
+      (specifier.importKind === "value" || node.importKind === "value") &&
+      specifier.type === "ImportSpecifier" &&
+      specifier.imported.type === "Identifier"
+    ) {
+      state.valueImports.add(specifier.imported.name);
+    }
+
+    // `import type {Vec4} from 'gl-matrix'` => `import type {vec4} from 'gl-matrix'`
+    if (
+      (specifier.importKind === "type" || node.importKind === "type") &&
       specifier.type === "ImportSpecifier" &&
       specifier.imported.type === "Identifier" &&
       specifier.imported.name in GlMatrixTypes
     ) {
-      specifier.imported.name =
-        GlMatrixTypes[specifier.imported.name as keyof typeof GlMatrixTypes];
+      const glMatrixType = GlMatrixTypes[specifier.imported.name as keyof typeof GlMatrixTypes];
+      if (state.valueImports.has(glMatrixType)) {
+        if (path.node.specifiers.length > 1) {
+          path.node.specifiers = path.node.specifiers.filter((s) => s !== specifier);
+        } else {
+          path.remove();
+        }
+      } else {
+        specifier.imported.name = glMatrixType
+      }
     }
   }
 
@@ -155,12 +171,8 @@ export function transformDeclarations({
       // `import {...} from`
       if (path.node.specifiers) {
         for (const specifier of path.node.specifiers) {
-          if (
-            specifier.type === "ImportSpecifier" &&
-            ((specifier && specifier.importKind === "type") ||
-              (path.node && path.node.importKind === "type"))
-          ) {
-            updateImports(path, specifier);
+          if (specifier.type === "ImportSpecifier") {
+            updateImports(path, specifier, state);
 
             // `import {type X} from` => `import {X} from`
             if (specifier.importKind === "type") {

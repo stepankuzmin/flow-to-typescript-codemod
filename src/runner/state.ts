@@ -39,4 +39,7 @@ export type State = {
 
   // A static type provider for types that may change based on flags
   readonly configurableTypeProvider: ConfigurableTypeProvider;
+
+  // Unique import values (as opposed to types) used in the file
+  readonly valueImports: Set<string>;
 };

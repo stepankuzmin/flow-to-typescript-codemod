@@ -11,6 +11,33 @@ describe("mapbox-gl", () => {
     expect(await transform(`let _: Mat2;`)).toBe(`let _: mat2;`);
   });
 
+  it("deduplicate import from `gl-matrix`", async () => {
+    const src = dedent`
+    import {vec3} from 'gl-matrix';
+    import type {Vec3} from 'gl-matrix';
+    `;
+
+    const expected = dedent`
+    import {vec3} from 'gl-matrix';
+    `;
+
+    expect(await transform(src)).toBe(expected);
+  });
+
+  it("deduplicate multiple imports from `gl-matrix`", async () => {
+    const src = dedent`
+    import {vec3} from 'gl-matrix';
+    import type {Mat2, Vec3} from 'gl-matrix';
+    `;
+
+    const expected = dedent`
+    import {vec3} from 'gl-matrix';
+    import type {mat2} from 'gl-matrix';
+    `;
+
+    expect(await transform(src)).toBe(expected);
+  });
+
   it("transform `@mapbox/geojson-types`", async () => {
     const src = `import type {GeoJSON} from '@mapbox/geojson-types';`;
     const expected = ``;

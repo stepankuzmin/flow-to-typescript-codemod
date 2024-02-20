@@ -82,6 +82,7 @@ export async function processBatchAsync(
             useStrictAnyFunctionType: options.useStrictAnyFunctionType,
             useStrictAnyObjectType: options.useStrictAnyObjectType,
           }),
+          valueImports: new Set(),
         };
         const transforms = Array.from(defaultTransformerChain);
 

@@ -15,18 +15,18 @@ describe("transform spread JSX attributes", () => {
     const src = `
     type Props = { it: string, foo: number };
 
-    function Foobar(x: Props) { 
+    function Foobar(x: Props) {
       const { it, ...rest } = x;
       return <Mine it={it} {...rest} />
     }`;
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
-    function Foobar(x: Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>) { 
+    function Foobar(x: Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>) {
       const { it, ...rest } = x;
       return <Mine it={it} {...rest} />
     }`;
@@ -44,18 +44,18 @@ describe("transform spread JSX attributes", () => {
     const src = `
     type Props = { it: string, foo: number };
 
-    const Foobar = (x: Props) => { 
+    const Foobar = (x: Props) => {
       const { it, ...rest } = x;
       return <Mine it={it} {...rest} />
     }`;
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
-    const Foobar = (x: Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>) => { 
+    const Foobar = (x: Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>) => {
       const { it, ...rest } = x;
       return <Mine it={it} {...rest} />
     }`;
@@ -73,7 +73,7 @@ describe("transform spread JSX attributes", () => {
     const src = `
     type Props = { it: string, foo: number };
 
-    function Foobar(x: Props) { 
+    function Foobar(x: Props) {
       const { it, ...rest } = x;
       if (true) {
         return <Mine it={it} {...rest} />
@@ -84,11 +84,11 @@ describe("transform spread JSX attributes", () => {
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
-    function Foobar(x: Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>) { 
+    function Foobar(x: Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>) {
       const { it, ...rest } = x;
       if (true) {
         return <Mine it={it} {...rest} />
@@ -121,8 +121,8 @@ describe("transform spread JSX attributes", () => {
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
     class MyComponent extends React.Component<Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>> {
@@ -157,8 +157,8 @@ describe("transform spread JSX attributes", () => {
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
     class MyComponent extends React.Component<Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>> {
@@ -192,8 +192,8 @@ describe("transform spread JSX attributes", () => {
 
     const expected = `
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
     class MyComponent extends React.Component<Props> {
@@ -228,11 +228,11 @@ describe("transform spread JSX attributes", () => {
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type State = {
-      thing: boolean
+      thing: boolean;
     };
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
     class MyComponent extends React.Component<Props & Omit<Omit<Flow.ComponentProps<typeof Mine>, 'it'>, keyof Props>, State> {
@@ -256,18 +256,18 @@ describe("transform spread JSX attributes", () => {
     const src = `
     type Props = { it: string, foo: number };
 
-    function Foobar(x: Props) { 
+    function Foobar(x: Props) {
       const { it, ...rest } = x;
       return <Mine {...rest} />
     }`;
     const expected = `
     import {Flow} from 'flow-to-typescript-codemod';
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
-    function Foobar(x: Props & Omit<Flow.ComponentProps<typeof Mine>, keyof Props>) { 
+    function Foobar(x: Props & Omit<Flow.ComponentProps<typeof Mine>, keyof Props>) {
       const { it, ...rest } = x;
       return <Mine {...rest} />
     }`;
@@ -285,18 +285,18 @@ describe("transform spread JSX attributes", () => {
     const src = `
     type Props = { it: string, foo: number };
 
-    function Foobar(x: Props) { 
+    function Foobar(x: Props) {
       const { it, ...rest } = x;
       const El = Mine;
       return <El it={it} {...rest} />
     }`;
     const expected = `
     type Props = {
-      it: string,
-      foo: number
+      it: string;
+      foo: number;
     };
 
-    function Foobar(x: Props) { 
+    function Foobar(x: Props) {
       const { it, ...rest } = x;
       const El = Mine;
       return <El it={it} {...rest} />

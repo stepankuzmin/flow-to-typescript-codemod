@@ -3,13 +3,11 @@
   "extends": [
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "jest",
-    "@typescript-eslint",
-    "prettier"
+    "@typescript-eslint"
   ],
   "env": {
     "jest": true
@@ -26,7 +24,6 @@
     "no-param-reassign": "off",
     "no-continue": "off",
     "no-nested-ternary": "off",
-    "prettier/prettier": "error",
     "prefer-destructuring": ["error", {
       "array": false,
       "object": true

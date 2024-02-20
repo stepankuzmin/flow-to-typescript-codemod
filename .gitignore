@@ -16,3 +16,6 @@ src/test/test-files/*.tsx
 *.tsbuildinfo
 
 coverage/
+
+*.sh
+migration-report.csv

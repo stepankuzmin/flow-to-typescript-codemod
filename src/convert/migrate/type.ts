@@ -775,7 +775,7 @@ function actuallyMigrateType(
     }
 
     case "InterfaceTypeAnnotation":
-      // Drop Interface and use type literal
+      // Drop Interface type and use type literal
       return migrateType(reporter, state, flowType.body);
 
     case "IntersectionTypeAnnotation":
@@ -956,7 +956,7 @@ function actuallyMigrateType(
 
       const tsUnionType = t.tsUnionType(
         flowType.types.map((flowMemberType, i) => {
-          const tsMemberType = migrateType(reporter, state, flowMemberType);
+          const tsMemberType = migrateType(reporter, state, flowMemberType, metaData);
 
           // If one of the union members is `any` then flatten out the union to just that.
           // This happens fairly frequently for types coming from `flowTypeAtPos()`.

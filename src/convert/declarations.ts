@@ -272,6 +272,7 @@ export function transformDeclarations({
       const body = migrateType(reporter, state, path.node.body, {
         isInterfaceBody: true,
       });
+
       if (!t.isTSTypeLiteral(body))
         throw new Error(`Unexpected AST node: ${JSON.stringify(body.type)}`);
 

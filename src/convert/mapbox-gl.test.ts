@@ -43,6 +43,7 @@ describe("mapbox-gl", () => {
     const expected = ``;
     expect(await transform(src)).toBe(expected);
     expect(await transform(`let _: GeoJSONFeature;`)).toBe(`let _: GeoJSON.Feature;`);
+    expect(await transform(`export interface QueryFeature extends GeoJSONFeature {};`)).toBe(`export interface QueryFeature extends GeoJSON.Feature {};`);
   });
 
   it("transform `@mapbox/vector-tile`", async () => {

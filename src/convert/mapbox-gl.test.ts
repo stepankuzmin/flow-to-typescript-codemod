@@ -51,6 +51,7 @@ describe("mapbox-gl", () => {
     const expected = `import type {VectorTile} from '@mapbox/vector-tile';`;
     expect(await transform(src)).toBe(expected);
     expect(await transform(`let _: IVectorTile;`)).toBe(`let _: VectorTile;`);
+    expect(await transform(`class GeoJSONWrapper implements IVectorTile {};`)).toBe(`class GeoJSONWrapper implements VectorTile {};`);
   });
 
   it("Flow Global Types", async () => {

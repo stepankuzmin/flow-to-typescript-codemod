@@ -520,6 +520,28 @@ export function transformDeclarations({
     ClassMethod: functionVisitor({ awaitPromises, reporter, state }),
     ClassDeclaration(path) {
       const { node } = path;
+
+      if (path.node.implements) {
+        path.node.implements = path.node.implements.map((flowImplements) => {
+           if (flowImplements.type !== "ClassImplements") {
+             return flowImplements;
+           }
+
+          const tsImplements = t.tsExpressionWithTypeArguments(
+            migrateQualifiedIdentifier(flowImplements.id),
+            flowImplements.typeParameters
+              ? migrateTypeParameterInstantiation(
+                reporter,
+                state,
+                flowImplements.typeParameters
+              )
+              : null
+          );
+
+          return tsImplements;
+        });
+      }
+
       if (node.superClass && node.superTypeParameters) {
         // If it extends React.Component, we may need to modify the type to make sure it's still valid
         // in TS. Some parameters like null make it an invalid component.

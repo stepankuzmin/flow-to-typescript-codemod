@@ -350,7 +350,7 @@ class MigrationReporter {
   foundNonFlowfile(filePath: string) {
     this.log(
       MigrationReportItemType.foundNonFlowFile,
-      MigrationReportItemSeverity.error,
+      MigrationReportItemSeverity.warn,
       filePath,
       { start: { column: 0, line: 0 }, end: { column: 0, line: 0 } },
       "The codemod skipped this file because it was not annotated with `@flow`."

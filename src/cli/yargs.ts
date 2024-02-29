@@ -237,7 +237,7 @@ export const parseCommands = (
           })
           .option("convertUnannotated", {
             type: "boolean",
-            default: false,
+            default: true,
             describe: `Converts files with no flow annotations as no-Flow files`,
           });
       },

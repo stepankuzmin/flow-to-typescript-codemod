@@ -21,7 +21,7 @@ export function annotateNoFlow({ file }: TransformerInput) {
         {
           leading: true,
           trailing: false,
-          value: `@ts-nocheck`,
+          value: ` @ts-nocheck`,
           type: "CommentLine",
         },
       ]);

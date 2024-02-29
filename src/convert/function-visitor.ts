@@ -37,13 +37,6 @@ export const functionVisitor = <
     // TypeScript can’t infer unannotated function parameters unlike Flow. We accept lower
     // levels of soundness in type files. We’ll manually annotate non-test files.
     if (state.config.isTestFile) {
-      for (const param of path.node.params) {
-        if (!(param as t.Identifier).typeAnnotation) {
-          (param as t.Identifier).typeAnnotation = t.tsTypeAnnotation(
-            t.tsAnyKeyword()
-          );
-        }
-      }
       return;
     }
 

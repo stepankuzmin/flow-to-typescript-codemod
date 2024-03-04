@@ -45,7 +45,7 @@
     "@types/react": "^18.2.57",
     "@types/signale": "^1.4.7",
     "@types/yargs": "^17.0.32",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.0.2",
     "chalk": "^2.4.2",
     "csv-stringify": "^6.4.5",

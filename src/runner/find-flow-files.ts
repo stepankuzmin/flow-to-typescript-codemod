@@ -43,7 +43,12 @@ export function findFlowFilesAsync(
     let waiting = 0;
     // All the valid file paths that we have found.
     const filePaths: FlowFileList = [];
+
     // Track ignored files
+    if (stripPathsForIgnore) {
+      ignoredDirectories = ignoredDirectories.map((dir) => dir.replace(/^(?:\.\.\/)+/, ""));
+    }
+
     const ig = ignore().add(ignoredDirectories);
 
     // Begin the recursion!

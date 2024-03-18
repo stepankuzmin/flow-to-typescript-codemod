@@ -51,7 +51,7 @@
     "csv-stringify": "^6.4.5",
     "dedent": "^1.5.1",
     "esbuild": "0.20.1",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.9.0",
     "flow": "^0.2.3",

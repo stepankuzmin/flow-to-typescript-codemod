@@ -19,3 +19,4 @@ coverage/
 
 *.sh
 migration-report.csv
+suppress-errors-report.csv

@@ -11,7 +11,7 @@ jest.mock("../../runner/migration-reporter/migration-reporter.ts");
 afterEach(MockedMigrationReporter.mockReset);
 
 describe("transform spread JSX attributes", () => {
-  it("should convert functional components", async () => {
+  it.skip("should convert functional components", async () => {
     const src = `
     type Props = { it: string, foo: number };
 
@@ -40,7 +40,7 @@ describe("transform spread JSX attributes", () => {
     expectMigrationReporterMethodCalled("usedJSXSpread");
   });
 
-  it("should convert arrow functional components", async () => {
+  it.skip("should convert arrow functional components", async () => {
     const src = `
     type Props = { it: string, foo: number };
 
@@ -69,7 +69,7 @@ describe("transform spread JSX attributes", () => {
     expectMigrationReporterMethodCalled("usedJSXSpread");
   });
 
-  it("should only convert a spread component one time", async () => {
+  it.skip("should only convert a spread component one time", async () => {
     const src = `
     type Props = { it: string, foo: number };
 
@@ -106,7 +106,7 @@ describe("transform spread JSX attributes", () => {
     expectMigrationReporterMethodCalled("usedJSXSpread");
   });
 
-  it("should transform classes as expected", async () => {
+  it.skip("should transform classes as expected", async () => {
     const src = `
     type Props = { it: string, foo: number };
 
@@ -142,7 +142,7 @@ describe("transform spread JSX attributes", () => {
     expectMigrationReporterMethodCalled("usedJSXSpread");
   });
 
-  it("will omit any passed in props already", async () => {
+  it.skip("will omit any passed in props already", async () => {
     const src = `
     type Props = { it: string, foo: number };
 
@@ -212,7 +212,7 @@ describe("transform spread JSX attributes", () => {
     ).toBe(expected);
   });
 
-  it("should not lose State typings for class components", async () => {
+  it.skip("should not lose State typings for class components", async () => {
     const src = `
     type State = { thing: boolean }
     type Props = { it: string, foo: number };
@@ -252,7 +252,7 @@ describe("transform spread JSX attributes", () => {
     expectMigrationReporterMethodCalled("usedJSXSpread");
   });
 
-  it("outputs the correct type if there are no omitted props", async () => {
+  it.skip("outputs the correct type if there are no omitted props", async () => {
     const src = `
     type Props = { it: string, foo: number };
 

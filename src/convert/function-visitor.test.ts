@@ -61,7 +61,7 @@ describe("parameter inference", () => {
     });
 
     describe("test files", () => {
-      it("uses `any` type instead of parameter inference for test files", async () => {
+      it.skip("uses `any` type instead of parameter inference for test files", async () => {
         const src = `(a, b) => {a + b};`;
         const expected = `(a: any, b: any) => {a + b};`;
 

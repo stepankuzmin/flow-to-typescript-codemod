@@ -32,7 +32,7 @@ export const MomentTypes = {
 } as const;
 
 export const GeoJSONTypes = {
-  GeoJSON: "GeoJSON",
+  GeoJSON: "GeoJSON.GeoJSON",
   GeoJSONPosition: "GeoJSON.Position",
   GeoJSONGeometry: "GeoJSON.Geometry",
   GeoJSONFeature: "GeoJSON.Feature",

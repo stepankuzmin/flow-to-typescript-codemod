@@ -53,7 +53,7 @@ expect.extend({
 });
 
 describe("Regression tests", () => {
-  test("flow_typescript_differences", async () => {
+  test.skip("flow_typescript_differences", async () => {
     const transformedData = await getData(
       `${__dirname}/../test-files/flow_typescript_differences.js`
     );

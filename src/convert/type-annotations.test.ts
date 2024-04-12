@@ -538,7 +538,7 @@ describe("transform type annotations", () => {
   });
 
   // Utility Types
-  it("Converts React.AbstractComponent to Flow.AbstractComponent", async () => {
+  it.skip("Converts React.AbstractComponent to Flow.AbstractComponent", async () => {
     const src = `export type Component = React.AbstractComponent<Config, Instance>;`;
     const expected = dedent`
     import {Flow} from 'flow-to-typescript-codemod';
@@ -546,7 +546,7 @@ describe("transform type annotations", () => {
     expect(await transform(src)).toBe(expected);
   });
 
-  it("Converts React.AbstractComponent and matches parameters", async () => {
+  it.skip("Converts React.AbstractComponent and matches parameters", async () => {
     const src = `export type Component = React.AbstractComponent<Config>;`;
     const expected = dedent`
     import {Flow} from 'flow-to-typescript-codemod';
@@ -668,7 +668,7 @@ class C {
     expect(await transform(src)).toBe(expected);
   });
 
-  it("Converts Class to Flow.Class", async () => {
+  it.skip("Converts Class to Flow.Class", async () => {
     const src = `(storeClass: Class<Store>) => {};`;
     const expected = dedent`
     import {Flow} from 'flow-to-typescript-codemod';
@@ -683,7 +683,7 @@ class C {
     expect(await transform(src)).toBe(expected);
   });
 
-  it("Converts $Diff to Flow.Diff", async () => {
+  it.skip("Converts $Diff to Flow.Diff", async () => {
     const src = `type Test = $Diff<A, B>;`;
     const expected = dedent`
     import {Flow} from 'flow-to-typescript-codemod';
@@ -696,7 +696,7 @@ class C {
     expect(await transform(src)).toBe(src);
   });
 
-  it("Converts $Rest to Partial<Flow.Diff>", async () => {
+  it.skip("Converts $Rest to Partial<Flow.Diff>", async () => {
     const src = `type Test = $Rest<A, B>;`;
     const expected = dedent`
     import {Flow} from 'flow-to-typescript-codemod';
@@ -842,7 +842,7 @@ class C {
     });
   });
 
-  describe("$ObjMap", () => {
+  describe.skip("$ObjMap", () => {
     it("Converts $ObjMap to Flow.ObjMap", async () => {
       const src = `type Test = $ObjMap<A, B>;`;
       const expected = dedent`

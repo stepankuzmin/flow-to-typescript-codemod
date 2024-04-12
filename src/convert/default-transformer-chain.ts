@@ -3,7 +3,7 @@ import {
   expressionTransformRunner,
   jsxTransformRunner,
   hasJsxTransformRunner,
-  importTransformRunner,
+  // importTransformRunner,
   jsxSpreadTransformRunner,
   patternTransformRunner,
   privateTypeTransformRunner,
@@ -24,6 +24,6 @@ export const defaultTransformerChain: readonly Transformer[] = [
   typeAnnotationTransformRunner,
   patternTransformRunner,
   jsxSpreadTransformRunner,
-  importTransformRunner,
+  // importTransformRunner,
   removeFlowCommentTransformRunner,
 ];

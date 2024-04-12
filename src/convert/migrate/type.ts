@@ -244,11 +244,12 @@ function actuallyMigrateType(
           state.config.filePath,
           flowType.loc as t.SourceLocation
         );
-        state.usedUtils = true;
-        return t.tsTypeReference(
-          t.tsQualifiedName(t.identifier("Flow"), t.identifier("ObjMap")),
-          params
-        );
+        // state.usedUtils = true;
+        // return t.tsTypeReference(
+        //   t.tsQualifiedName(t.identifier("Flow"), t.identifier("ObjMap")),
+        //   params
+        // );
+        return t.tsTypeReference(t.identifier("ObjMap"), params);
       }
 
       // `$Subtype<T>` → `any`
@@ -299,11 +300,13 @@ function actuallyMigrateType(
         params &&
         params.params.length === 1
       ) {
-        state.usedUtils = true;
-        return t.tsTypeReference(
-          t.tsQualifiedName(t.identifier("Flow"), t.identifier("Class")),
-          params
-        );
+        // state.usedUtils = true;
+        // return t.tsTypeReference(
+        //   t.tsQualifiedName(t.identifier("Flow"), t.identifier("Class")),
+        //   params
+        // );
+
+        return t.tsTypeReference(t.identifier("Class"), params);
       }
 
       // `$Diff<A, B>` → `Flow.Diff<A, B>`

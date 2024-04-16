@@ -22,7 +22,9 @@ export function transformTypeAnnotations({
       // parameters that accept `void` optional.
       if (
         path.parent.type === "Identifier" &&
-        path.parentPath.parent.type !== "VariableDeclarator"
+        path.parentPath.parent.type !== "VariableDeclarator" &&
+        // Avoid Class setters
+        !(path.parentPath?.parentPath?.node?.type === "ClassMethod" && path.parentPath?.parentPath?.node?.kind === "set")
       ) {
         // `function f(x: ?T)` → `function f(x?: T | null)`
         if (path.node.typeAnnotation.type === "NullableTypeAnnotation") {
@@ -41,7 +43,9 @@ export function transformTypeAnnotations({
           path.node.typeAnnotation.type === "UnionTypeAnnotation" &&
           path.node.typeAnnotation.types.some(
             (unionType) => unionType.type === "VoidTypeAnnotation"
-          )
+          ) &&
+          // Avoid Class setters
+          !(path.parentPath?.parentPath?.node?.type === "ClassMethod" && path.parentPath?.parentPath?.node?.kind === "set")
         ) {
           path.parent.optional = true;
           path.node.typeAnnotation.types =

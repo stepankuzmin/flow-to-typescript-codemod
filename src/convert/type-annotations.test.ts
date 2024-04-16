@@ -101,6 +101,30 @@ describe("transform type annotations", () => {
     expect(await transform(src)).toBe(src);
   });
 
+  it("Avoids converting class setters arguments to optional", async () => {
+    const src = dedent`
+    class C {
+      set foo(str: ?string) {}
+    }`;
+    const expected = dedent`
+    class C {
+      set foo(str: string | null | undefined) {}
+    }`;
+    expect(await transform(src)).toBe(expected);
+  });
+
+  it("Avoids converting class setters arguments to optional with union", async () => {
+    const src = dedent`
+    class C {
+      set foo(str: string | void) {}
+    }`;
+    const expected = dedent`
+    class C {
+      set foo(str: string | undefined) {}
+    }`;
+    expect(await transform(src)).toBe(expected);
+  });
+
   describe("converts literal types", () => {
     it("does not modify string literals", async () => {
       const src = dedent`const foo: string = 'foo';`;

@@ -8,7 +8,7 @@ describe("remove-flow-pragmas", () => {
   it("should remove standard inline flow pragmas", async () => {
     const src = dedent`
     // @flow
-    
+
     ${standardProgram}
     `;
 
@@ -28,7 +28,7 @@ describe("remove-flow-pragmas", () => {
   it("should remove the comment even if it has extra comment marks", async () => {
     const src = dedent`
       // ///// / / / / / /// // // /// ////////// /// // /////// @flow
-      
+
       ${standardProgram}
       `;
 
@@ -38,7 +38,7 @@ describe("remove-flow-pragmas", () => {
   it("should replace noflow with the ts-nocheck", async () => {
     const src = dedent`
     // @noflow
-    
+
     ${standardProgram}
     `;
 
@@ -54,13 +54,13 @@ describe("remove-flow-pragmas", () => {
   it("should replace noflow with ts-nocheck in a block comment", async () => {
     const src = dedent`
       /* @noflow */
-      
+
       ${standardProgram}
       `;
 
     const expected = dedent`
       /* @ts-nocheck */
-  
+
       ${standardProgram}
       `;
 
@@ -70,7 +70,7 @@ describe("remove-flow-pragmas", () => {
   it("should replace noflow with ts-nocheck event if it has extra comment marks", async () => {
     const src = dedent`
         // ///// / / / / / /// // // /// ////////// /// // /////// @noflow
-        
+
         ${standardProgram}
         `;
 
@@ -86,15 +86,17 @@ describe("remove-flow-pragmas", () => {
   it("should remove suppressions", async () => {
     const src = dedent`
         // $FlowFixMe
+        // $FlowFixMe.
+        // $FlowFixMe[method-unbinding]
         // $FlowIssue
         // $FlowExpectedError
         // $FlowIgnore
-        
+
         ${standardProgram}
         `;
 
     const expected = dedent`
-    
+
     ${standardProgram}
     `;
 
@@ -105,14 +107,14 @@ describe("remove-flow-pragmas", () => {
     const src = dedent`
         // $FlowNotSuppression
         // normal comment
-        
+
         ${standardProgram}
         `;
 
     const expected = dedent`
     // $FlowNotSuppression
     // normal comment
-    
+
     ${standardProgram}
     `;
 
@@ -144,15 +146,36 @@ describe("remove-flow-pragmas", () => {
     expect(await transform(src)).toEqual(expected);
   });
 
+  it("should remove suppressions inside class methods", async () => {
+    const src = dedent`
+    class MyClass {
+      // $FlowFixMe[method-unbinding]
+      myMethod() {
+        return 'foo';
+      }
+    }
+    `;
+
+    const expected = dedent`
+    class MyClass {
+      myMethod() {
+        return 'foo';
+      }
+    }
+    `;
+
+    expect(await transform(src)).toEqual(expected);
+  });
+
   it("should remove multiple suppressions", async () => {
     const src = dedent`
     const handler = () => {
       // $FlowIgnore - test
       const validWindowTarget = true;
-    
+
       // $FlowIgnore - test
       const unknownWindowTarget = false;
-    
+
       console.log(validWindowTarget.name);
     };
     `;
@@ -160,9 +183,9 @@ describe("remove-flow-pragmas", () => {
     const expected = dedent`
     const handler = () => {
       const validWindowTarget = true;
-    
+
       const unknownWindowTarget = false;
-    
+
       console.log(validWindowTarget.name);
     };
     `;

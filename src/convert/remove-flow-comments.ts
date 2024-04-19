@@ -15,7 +15,7 @@ const flowComments = [
  * Scan through top level programs, or code blocks and remove Flow-specific comments
  */
 const removeComments = (
-  path: NodePath<t.Program> | NodePath<t.BlockStatement>
+  path: NodePath<t.Program> | NodePath<t.BlockStatement> | NodePath<t.ClassBody> | NodePath<t.StaticBlock>
 ) => {
   if (path.node.body.length === 0) {
     return;
@@ -53,6 +53,12 @@ export function removeFlowComments({ file }: TransformerInput) {
       removeComments(path);
     },
     BlockStatement(path) {
+      removeComments(path);
+    },
+    ClassBody(path) {
+      removeComments(path);
+    },
+    StaticBlock(path) {
       removeComments(path);
     },
   });

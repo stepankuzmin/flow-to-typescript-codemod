@@ -11,12 +11,47 @@ const flowComments = [
   "$FlowIgnore",
 ];
 
+const filterComments = (comments: readonly t.Comment[] | null | undefined) => {
+  return comments
+    ?.filter(
+      (comment) => !flowComments.some((c) => comment.value.includes(c))
+    )
+    .map((comment) => {
+      if (comment.value.includes("@noflow")) {
+        return {
+          ...comment,
+          value: comment.value.replace(/@noflow/, "@ts-nocheck"),
+        };
+      }
+
+      return comment;
+    });
+}
+
 /**
  * Scan through top level programs, or code blocks and remove Flow-specific comments
  */
 const removeComments = (
-  path: NodePath<t.Program> | NodePath<t.BlockStatement> | NodePath<t.ClassBody> | NodePath<t.StaticBlock>
+  path:
+    | NodePath<t.Program>
+    | NodePath<t.BlockStatement>
+    | NodePath<t.ClassBody>
+    | NodePath<t.StaticBlock>
+    | NodePath<t.ObjectProperty>
+    | NodePath<t.ObjectExpression>
 ) => {
+  if (path.type === "ObjectProperty") {
+    // @ts-expect-error
+    path.node.comments = filterComments(path.node.comments) || path.node.comments;
+    return;
+  }
+
+  if (path.type === "ObjectExpression") {
+    const {innerComments} = path.node;
+    path.node.innerComments = filterComments(innerComments) || path.node.innerComments;
+    return;
+  }
+
   if (path.node.body.length === 0) {
     return;
   }
@@ -25,22 +60,7 @@ const removeComments = (
 
   for (const rootNode of nodes) {
     const { comments } = rootNode;
-
-    rootNode.comments =
-      comments
-        ?.filter(
-          (comment) => !flowComments.some((c) => comment.value.includes(c))
-        )
-        .map((comment) => {
-          if (comment.value.includes("@noflow")) {
-            return {
-              ...comment,
-              value: comment.value.replace(/@noflow/, "@ts-nocheck"),
-            };
-          }
-
-          return comment;
-        }) || rootNode.comments;
+    rootNode.comments = filterComments(comments as t.Comment[]) || rootNode.comments;
   }
 };
 
@@ -61,5 +81,11 @@ export function removeFlowComments({ file }: TransformerInput) {
     StaticBlock(path) {
       removeComments(path);
     },
+    ObjectExpression(path) {
+      removeComments(path);
+    },
+    ObjectProperty(path) {
+      removeComments(path);
+    }
   });
 }

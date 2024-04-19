@@ -151,7 +151,7 @@ describe("remove-flow-pragmas", () => {
     class MyClass {
       // $FlowFixMe[method-unbinding]
       myMethod() {
-        return 'foo';
+        return 42;
       }
     }
     `;
@@ -159,8 +159,47 @@ describe("remove-flow-pragmas", () => {
     const expected = dedent`
     class MyClass {
       myMethod() {
-        return 'foo';
+        return 42;
       }
+    }
+    `;
+
+    expect(await transform(src)).toEqual(expected);
+  });
+
+  it("should remove suppressions inside object declarations", async () => {
+    const src = dedent`
+    const myObject = {
+      // $FlowFixMe[incompatible-call]
+      value: 42,
+    };
+    `;
+
+    const expected = dedent`
+    const myObject = {
+      value: 42,
+    };
+    `;
+
+    expect(await transform(src)).toEqual(expected);
+  });
+
+  it.skip("should remove suppressions inside logical expressions", async () => {
+    const src = dedent`
+    if (true ||
+        // $FlowFixMe.
+        true ||
+        // $FlowFixMe.
+        false) {
+      console.log('ok');
+    }
+    `;
+
+    const expected = dedent`
+    if (true ||
+        true ||
+        false) {
+      console.log('ok');
     }
     `;
 

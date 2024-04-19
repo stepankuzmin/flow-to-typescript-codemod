@@ -53,7 +53,7 @@ describe("transform declarations", () => {
 
     it("transforms type * exports", async () => {
       const src = `export type * from './foo';`;
-      const expected = `export * from './foo';`;
+      const expected = `export type * from './foo';`;
       expect(await transform(src)).toBe(expected);
     });
 

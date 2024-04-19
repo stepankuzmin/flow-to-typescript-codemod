@@ -189,10 +189,6 @@ export function transformDeclarations({
       );
     },
 
-    ExportAllDeclaration(path) {
-      delete path.node.exportKind;
-    },
-
     TypeAlias(path) {
       replaceWith(
         path,

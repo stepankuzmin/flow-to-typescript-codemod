@@ -196,10 +196,22 @@ export function transformExpressions({
       if (glMatrixTypes.includes(calleeObjectName)) {
         path.node.arguments.forEach((argument, index) => {
           if (t.isArrayExpression(argument) && argument.elements.length === 0) {
+            // [] as any
             path.node.arguments[index] = t.tsAsExpression(
               argument,
               t.tsAnyKeyword()
             );
+          } else if (t.isIdentifier(argument)) {
+            const bindingNode = path.scope.getBinding(argument.name)?.path.node;
+            if (bindingNode?.type === 'VariableDeclarator') {
+                // _ as [number, number, number]
+                if (bindingNode?.init?.type === 'ArrayExpression') {
+                  path.node.arguments[index] = t.tsAsExpression(
+                    argument,
+                    t.tsTupleType(bindingNode?.init.elements.map(() => t.tsNumberKeyword()))
+                  );
+                }
+            }
           }
         });
       }

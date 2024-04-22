@@ -179,6 +179,20 @@ describe("transform expressions", () => {
 
       expect(await transform(src)).toBe(expected);
     });
+
+    it("mat4", async () => {
+      const src = dedent`
+      const offset = [0, 0, 0];
+      mat4.translate(matrix, matrix, offset);
+      `;
+
+      const expected = dedent`
+      const offset = [0, 0, 0];
+      mat4.translate(matrix, matrix, offset as [number, number, number]);
+      `;
+
+      expect(await transform(src)).toBe(expected);
+    });
   });
 
   describe("untyped reduce MemberExpression", () => {

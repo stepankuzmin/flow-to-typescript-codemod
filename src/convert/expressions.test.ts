@@ -167,6 +167,20 @@ describe("transform expressions", () => {
     });
   });
 
+  describe("gl-matrix", () => {
+    it("mat2", async () => {
+      const src = dedent`
+      mat2.invert([], [[1, 2], [3, 4]]);
+      `;
+
+      const expected = dedent`
+      mat2.invert([] as any, [[1, 2], [3, 4]]);
+      `;
+
+      expect(await transform(src)).toBe(expected);
+    });
+  });
+
   describe("untyped reduce MemberExpression", () => {
     it("should do nothing if there is a simple primitive value", async () => {
       const rootSrc = dedent`const a = [1, 2, 3].reduce((acc, val) => acc + val, 0);`;

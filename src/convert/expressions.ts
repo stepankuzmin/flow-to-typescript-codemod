@@ -11,6 +11,9 @@ import { migrateTypeParameterInstantiation } from "./migrate/type-parameter";
 import { TransformerInput } from "./transformer";
 import MigrationReporter from "../runner/migration-reporter";
 import { State } from "../runner/state";
+import {GlMatrixTypes} from "./utils/type-mappings";
+
+const glMatrixTypes = Object.values(GlMatrixTypes);
 
 /**
  * Transform expression nodes and type assertions
@@ -187,6 +190,19 @@ export function transformExpressions({
     },
     CallExpression(path) {
       migrateArgumentsToParameters(path, reporter, state);
+
+      // @ts-expect-error callee is not in the babel types
+      const calleeObjectName = path.node.callee?.object?.name;
+      if (glMatrixTypes.includes(calleeObjectName)) {
+        path.node.arguments.forEach((argument, index) => {
+          if (t.isArrayExpression(argument) && argument.elements.length === 0) {
+            path.node.arguments[index] = t.tsAsExpression(
+              argument,
+              t.tsAnyKeyword()
+            );
+          }
+        });
+      }
 
       if (
         t.isMemberExpression(path.node.callee) &&

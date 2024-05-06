@@ -25,14 +25,14 @@
     "types": "tsc -b ."
   },
   "resolutions": {
-    "@babel/parser": "7.16.0",
+    "@babel/parser": "7.24.5",
     "@babel/traverse": "7.16.0",
     "@babel/types": "7.16.0",
     "code-block-writer": "10",
     "minimist": "1.2.6"
   },
   "devDependencies": {
-    "@babel/parser": "7.16.0",
+    "@babel/parser": "7.24.5",
     "@babel/traverse": "7.16.0",
     "@babel/types": "7.16.0",
     "@types/babel__traverse": "^7.0.7",

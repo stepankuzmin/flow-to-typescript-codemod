@@ -41,8 +41,8 @@ const removeComments = (
     | NodePath<t.ObjectExpression>
 ) => {
   if (path.type === "ObjectProperty") {
-    // @ts-expect-error
-    path.node.comments = filterComments(path.node.comments) || path.node.comments;
+    const {node}: {node: types.namedTypes.Node} = path;
+    node.comments = filterComments(node.comments as t.Comment[]) || node.comments;
     return;
   }
 
@@ -69,6 +69,12 @@ const removeComments = (
  */
 export function removeFlowComments({ file }: TransformerInput) {
   traverse(file, {
+    enter(path) {
+      const {node}: {node: types.namedTypes.Node} = path;
+      if (node.comments) {
+        node.comments = filterComments(node.comments as t.Comment[]) || node.comments;
+      }
+    },
     Program(path) {
       removeComments(path);
     },

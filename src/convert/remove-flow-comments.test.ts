@@ -184,7 +184,7 @@ describe("remove-flow-pragmas", () => {
     expect(await transform(src)).toEqual(expected);
   });
 
-  it.skip("should remove suppressions inside logical expressions", async () => {
+  it("should remove suppressions inside logical expressions", async () => {
     const src = dedent`
     if (true ||
         // $FlowFixMe.
@@ -201,6 +201,23 @@ describe("remove-flow-pragmas", () => {
         false) {
       console.log('ok');
     }
+    `;
+
+    expect(await transform(src)).toEqual(expected);
+  });
+
+  it("should remove suppressions inside function arguments", async () => {
+    const src = dedent`
+    fn(
+      // $FlowFixMe[method-unbinding]
+      arg
+    );
+    `;
+
+    const expected = dedent`
+    fn(
+      arg
+    );
     `;
 
     expect(await transform(src)).toEqual(expected);

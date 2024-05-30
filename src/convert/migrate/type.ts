@@ -244,12 +244,52 @@ function actuallyMigrateType(
           state.config.filePath,
           flowType.loc as t.SourceLocation
         );
-        // state.usedUtils = true;
-        // return t.tsTypeReference(
-        //   t.tsQualifiedName(t.identifier("Flow"), t.identifier("ObjMap")),
-        //   params
-        // );
-        return t.tsTypeReference(t.identifier("ObjMap"), params);
+
+        if (params.params[1].type !== 'TSFunctionType') {
+          return t.tsTypeReference(t.identifier("ObjMap"), params);
+        }
+
+        const keyof = t.tsTypeOperator(params.params[0]);
+        keyof.operator = 'keyof';
+
+        const typeParameter = t.tsTypeParameter(keyof, null, 'Key');
+
+        const indexedAccessType = t.tsIndexedAccessType(
+          params.params[0],
+          t.tsTypeReference(t.identifier('Key'))
+        );
+
+        const argumentType = params.params[1].parameters[0].typeAnnotation;
+        const returnType = params.params[1].typeAnnotation?.typeAnnotation;
+
+        if (!t.isTSTypeAnnotation(argumentType) || !t.isTSTypeReference(argumentType?.typeAnnotation)) {
+          // Fallback to ObjMap if we can't determine the type
+          return t.tsTypeReference(t.identifier("ObjMap"), params);
+        }
+
+        const inferParams = argumentType?.typeAnnotation?.typeParameters?.params.map(param => {
+          if (!t.isTSTypeReference(param) || !t.isIdentifier(param.typeName)) {
+            throw new Error('Expected type parameter to be a TSTypeReference with an Identifier typeName');
+          }
+          return t.tsInferType(t.tsTypeParameter(null, null, param.typeName.name));
+        });
+
+        const argumentTypeReference = t.tsTypeReference(
+          argumentType?.typeAnnotation?.typeName,
+          t.tsTypeParameterInstantiation(inferParams || [])
+        );
+
+        const conditionalType = t.tsConditionalType(
+          indexedAccessType,
+          argumentTypeReference,
+          returnType ? returnType : t.tsNeverKeyword(),
+          t.tsNeverKeyword()
+        );
+
+        return t.tsMappedType(
+          typeParameter,
+          conditionalType,
+        );
       }
 
       // `$Subtype<T>` → `any`

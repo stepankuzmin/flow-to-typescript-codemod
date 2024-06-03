@@ -19,4 +19,30 @@ describe("$ObjMap", () => {
 
     expect(await transform(src)).toBe(expected);
   });
+
+  it("TransitionablePropertyValues", async () => {
+    const src = dedent`type TransitionablePropertyValues<Props: {[string]: any}>
+    = $Exact<ObjMap<Props, <T, R>(p: Property<T, R>) => TransitionablePropertyValue<T, R>>>`;
+
+    const expected = dedent`type TransitionablePropertyValues<Props extends {
+      [key: string]: any;
+    }> = ObjMap<Props, <T, R>(p: Property<T, R>) => TransitionablePropertyValue<T, R>>;`;
+
+    console.log(await transform(src));
+
+    expect(await transform(src)).toBe(expected);
+  });
+
+  it("TransitionablePropertyValues", async () => {
+    const src = dedent`type TransitioningPropertyValues<Props: {[string]: any}>
+    = $Exact<ObjMap<Props, <T, R>(p: Property<T, R>) => TransitioningPropertyValue<T, R>>>`;
+
+    const expected = dedent`type TransitioningPropertyValues<Props extends {
+      [key: string]: any;
+    }> = ObjMap<Props, <T, R>(p: Property<T, R>) => TransitioningPropertyValue<T, R>>`;
+
+    console.log(await transform(src));
+
+    expect(await transform(src)).toBe(expected);
+  });
 });
